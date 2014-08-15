@@ -12,29 +12,41 @@ public class PitchExtractor implements PitchDetectionHandler {
 
 	public PitchProcessor mPitchProcessor;
 	
+	DetectedPitch mCurrDetectedPitch;
+	
 	public ArrayList<DetectedPitch> mDetectedPitchArray;
 	
 	public PitchExtractor(int sampleRate, int bufferSize){
 		PitchProcessor.PitchEstimationAlgorithm alg = 
 				PitchProcessor.PitchEstimationAlgorithm.AMDF;
 		
+//		PitchProcessor.PitchEstimationAlgorithm alg = 
+//				PitchProcessor.PitchEstimationAlgorithm.FFT_YIN;
+		
+		
+		
 		mPitchProcessor = new PitchProcessor(alg, sampleRate, bufferSize, this);
 		
 		
 	}
 	
-	
+	/***
+	 * is called in be.hogent.tarsos.dsp.pitch.PitchProcessor.process()
+	 * */
 	public void handlePitch(final PitchDetectionResult pitchDetectionResult,
 			AudioEvent audioEvent) {
-		float pitch = 0; 
+		float currPitch = 0;
+		double currTs = audioEvent.getTimeStamp();
 		
 		if (pitchDetectionResult.isPitched()) {
-			pitch = pitchDetectionResult.getPitch();
-			DetectedPitch currDetectedPitch = new DetectedPitch(pitch, audioEvent.getTimeStamp() );
-			this.mDetectedPitchArray.add(currDetectedPitch);
+			currPitch = pitchDetectionResult.getPitch();
+			
 		}
+	
+		mCurrDetectedPitch = new DetectedPitch(currPitch, currTs );
+		this.mDetectedPitchArray.add(mCurrDetectedPitch);
 		
-		Log.d("TAG", "pitch is " + pitch);
+		Log.i("TAG", "pitch is " + currPitch);
 		
 		
 	}

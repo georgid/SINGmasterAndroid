@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 import be.hogent.tarsos.dsp.AudioEvent;
@@ -73,6 +74,7 @@ public class AudioProcessor {
 	 * 
 	 */
 	public void record() {
+		// prepare output container
 		this.mPitchExtractor.mDetectedPitchArray = new ArrayList<DetectedPitch>(); 
 		
 		
@@ -101,10 +103,13 @@ public class AudioProcessor {
 	 * record and call pitch extraction
 	 * */
 	private void processAudio() {
-		Thread audioProcessingThread = new Thread(new AudioProcessingThreadWithFileRec());
+		Thread audioProcessingThread = new Thread(new AudioProcessingThread());
 		audioProcessingThread.start();
 	}
 	
+	/**
+	 *  thread with not file recording
+	 * **/
 	public class AudioProcessingThread implements Runnable{
 
 		@Override
@@ -117,7 +122,10 @@ public class AudioProcessor {
 				AudioEvent audioEvent = new AudioEvent(mTarsosFormat, bufferReadResult);
 				audioEvent.setFloatBufferWithByteBuffer(mBuffer);
 				
+				Date start = new Date();
 				mPitchExtractor.mPitchProcessor.process(audioEvent);
+				Date end = new Date();
+				Log.i(AudioProcessor.class.getName(), String.valueOf(end.getTime() - start.getTime() ) );
 			}
 			
 		
@@ -127,6 +135,7 @@ public class AudioProcessor {
 	
 	
 	/**
+	 *thread 
 	 * records audio from mic as well into file
 	 * */
 	public class AudioProcessingThreadWithFileRec implements Runnable{

@@ -29,7 +29,7 @@ import android.content.ContextWrapper;
  * */
 public class WavRecorder {
 
-	public final int sampleRate = 44100;  
+	public final int sampleRate = 16000;  
 	
 	public File outFile; 
 	public String fileName; 

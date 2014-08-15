@@ -13,7 +13,10 @@ import bg.singmaster.gui.R;
 
 public class TestActivity extends Activity {
 	
-	int SAMPLE_RATE=44100;
+//	int SAMPLE_RATE=44100;
+	int SAMPLE_RATE=8000;
+
+	
 	AudioProcessor mAudioProcessor; 
 	
 	private TextView mPitchBox;
